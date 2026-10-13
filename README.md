@@ -105,7 +105,9 @@ GROQ_MODEL=openai/gpt-oss-120b
 
 | Variable | Description |
 |----------|-------------|
-| `VITE_API_URL` | Public URL of the backend, e.g. `https://blogcraft-api.onrender.com` |
+| `VITE_API_URL` | Backend URL without the `/api` suffix (for example, `https://blog-craft-ai.onrender.com`) |
+
+Set `VITE_API_URL` in `frontend/.env` for local builds; copy `frontend/.env.example` as a starting point. In production, set the same variable in the frontend host's build environment.
 
 ## API Endpoints
 
@@ -175,7 +177,7 @@ Deploy as two services: a **Web Service** for the API and a **Static Site** for 
 - Root directory: `frontend`
 - Build command: `npm install && npm run build`
 - Publish directory: `dist`
-- Environment: `VITE_API_URL` set to the backend URL
+- Environment: set `VITE_API_URL` to the backend URL
 - Rewrite rule: `/*` → `/index.html` (so page refreshes on routes like `/dashboard` work)
 
 ### Deployment checklist
