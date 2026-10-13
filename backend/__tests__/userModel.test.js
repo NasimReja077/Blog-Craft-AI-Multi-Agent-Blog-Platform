@@ -1,8 +1,8 @@
-import { create, findOne } from '../models/User';
+import User from '../models/User.js';
 
 describe('User Model', () => {
   it('should hash password before saving', async () => {
-    const user = await create({
+    const user = await User.create({
       name: 'Hash Test',
       email: 'hash@example.com',
       password: 'plainpassword',
@@ -13,14 +13,14 @@ describe('User Model', () => {
   });
 
   it('should match correct password', async () => {
-    const user = await create({
+    const user = await User.create({
       name: 'Match Test',
       email: 'match@example.com',
       password: 'mypassword123',
     });
 
     // Need to re-fetch with password selected
-    const userWithPass = await findOne({ email: 'match@example.com' }).select('+password');
+    const userWithPass = await User.findOne({ email: 'match@example.com' }).select('+password');
     const isMatch = await userWithPass.matchPassword('mypassword123');
     expect(isMatch).toBe(true);
 
@@ -31,7 +31,7 @@ describe('User Model', () => {
   it('should require name, email and password', async () => {
     let error;
     try {
-      await create({ name: 'Incomplete' });
+      await User.create({ name: 'Incomplete' });
     } catch (err) {
       error = err;
     }

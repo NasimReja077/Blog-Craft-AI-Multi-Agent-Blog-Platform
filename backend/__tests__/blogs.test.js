@@ -1,12 +1,11 @@
 import request from 'supertest';
-import app from '../app';
-import { findById, create } from '../models/Blog';
-import User from '../models/User';
+import { jest } from '@jest/globals';
+import Blog from '../models/Blog.js';
 
 // Mock the multi-agent generator so tests don't call the real AI API
-jest.mock('../utils/multiAgent', () => ({
-  generateBlogWithAgents: jest.fn().mockImplementation(async (blogId) => {
-    const Blog = require('../models/Blog');
+jest.unstable_mockModule('../utils/multiAgent.js', () => ({
+  default: {
+    generateBlogWithAgents: jest.fn().mockImplementation(async (blogId) => {
     await Blog.findByIdAndUpdate(blogId, {
       status: 'completed',
       title: 'Mocked Blog Title',
@@ -21,8 +20,11 @@ jest.mock('../utils/multiAgent', () => ({
         slug: 'mocked-blog-title',
       },
     });
-  }),
+    }),
+  },
 }));
+
+const { default: app } = await import('../app.js');
 
 describe('Blogs API', () => {
   let token;
@@ -59,7 +61,7 @@ describe('Blogs API', () => {
       // Wait a bit for the mocked async generation
       await new Promise((r) => setTimeout(r, 100));
 
-      const blog = await findById(res.body.blogId);
+      const blog = await Blog.findById(res.body.blogId);
       expect(blog).toBeTruthy();
       expect(blog.topic).toBe('How Multi-Agent AI Works');
       expect(blog.user.toString()).toBe(userId);
@@ -96,14 +98,14 @@ describe('Blogs API', () => {
     });
 
     it('should return user blogs', async () => {
-      await create({
+      await Blog.create({
         user: userId,
         topic: 'Test Blog 1',
         status: 'completed',
         title: 'Test Blog 1',
         content: 'Content here',
       });
-      await create({
+      await Blog.create({
         user: userId,
         topic: 'Test Blog 2',
         status: 'pending',
@@ -127,7 +129,7 @@ describe('Blogs API', () => {
     let blogId;
 
     beforeEach(async () => {
-      const blog = await create({
+      const blog = await Blog.create({
         user: userId,
         topic: 'Single Blog',
         status: 'completed',
@@ -178,7 +180,7 @@ describe('Blogs API', () => {
     let blogId;
 
     beforeEach(async () => {
-      const blog = await create({
+      const blog = await Blog.create({
         user: userId,
         topic: 'Editable Blog',
         status: 'completed',
@@ -207,7 +209,7 @@ describe('Blogs API', () => {
     let blogId;
 
     beforeEach(async () => {
-      const blog = await create({
+      const blog = await Blog.create({
         user: userId,
         topic: 'Deletable Blog',
         status: 'completed',
@@ -223,7 +225,7 @@ describe('Blogs API', () => {
       expect(res.statusCode).toBe(200);
       expect(res.body.message).toMatch(/removed/i);
 
-      const deleted = await findById(blogId);
+      const deleted = await Blog.findById(blogId);
       expect(deleted).toBeNull();
     });
   });

@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from '../app';
-import { create } from '../models/User';
+import User from '../models/User.js';
 
 describe('Auth API', () => {
   describe('POST /api/auth/register', () => {
@@ -31,7 +31,7 @@ describe('Auth API', () => {
     });
 
     it('should fail if user already exists', async () => {
-      await create({
+      await User.create({
         name: 'Existing',
         email: 'existing@example.com',
         password: 'password123',
