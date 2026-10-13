@@ -97,7 +97,7 @@ GROQ_MODEL=openai/gpt-oss-120b
 | `MONGO_URI` | MongoDB connection string (local or Atlas) |
 | `JWT_SECRET` | Secret used to sign tokens |
 | `JWT_EXPIRE` | Token lifetime (default `7d`) |
-| `FRONTEND_URL` | Allowed CORS origin (no trailing slash) |
+| `FRONTEND_URL` | Comma-separated allowed CORS origins (no trailing slash), e.g. `https://blogcraft-ai.onrender.com,http://localhost:3000` |
 | `GROQ_API_KEY` | Get one at https://console.groq.com/keys |
 | `GROQ_MODEL` | Groq model name (default `openai/gpt-oss-120b`) |
 
