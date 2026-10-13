@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
-const asyncHandler = require('express-async-handler');
-const User = require('../models/User');
+import jwt from 'jsonwebtoken';
+import asyncHandler from 'express-async-handler';
+import User from '../models/User.js';
 
 const protect = asyncHandler(async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -39,15 +39,13 @@ const protect = asyncHandler(async (req, res, next) => {
     return next();
   } catch (error) {
     // Invalid, expired, or malformed tokens are expected auth failures.
-    if (
-      error instanceof jwt.JsonWebTokenError ||
-      error instanceof jwt.TokenExpiredError ||
-      error instanceof jwt.NotBeforeError
-    ) {
-      return res.status(401).json({
-        message: 'Not authorized, token failed',
-      });
-    }
+   if (
+    error instanceof jwt.JsonWebTokenError ||
+    error instanceof jwt.TokenExpiredError ||
+    error instanceof jwt.NotBeforeError
+  ) {
+    return res.status(401).json({message: 'Not authorized, token failed',});
+  }
 
     // Log unexpected server/database errors only.
     console.error('Authentication error:', error);
@@ -58,4 +56,4 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-module.exports = { protect };
+export { protect };

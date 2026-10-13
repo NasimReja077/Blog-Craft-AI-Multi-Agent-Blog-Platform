@@ -1,6 +1,6 @@
-const request = require('supertest');
-const app = require('../app');
-const User = require('../models/User');
+import request from 'supertest';
+import app from '../app';
+import { create } from '../models/User';
 
 describe('Auth API', () => {
   describe('POST /api/auth/register', () => {
@@ -31,7 +31,7 @@ describe('Auth API', () => {
     });
 
     it('should fail if user already exists', async () => {
-      await User.create({
+      await create({
         name: 'Existing',
         email: 'existing@example.com',
         password: 'password123',

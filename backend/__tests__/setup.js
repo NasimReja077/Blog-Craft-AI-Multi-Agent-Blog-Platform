@@ -1,5 +1,5 @@
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const mongoose = require('mongoose');
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import { connect, disconnect, connection } from 'mongoose';
 
 jest.setTimeout(30000);
 
@@ -13,18 +13,18 @@ let mongoServer;
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const uri = mongoServer.getUri();
-  await mongoose.connect(uri);
+  await connect(uri);
 });
 
 afterAll(async () => {
-  await mongoose.disconnect();
+  await disconnect();
   if (mongoServer) {
     await mongoServer.stop();
   }
 });
 
 afterEach(async () => {
-  const collections = mongoose.connection.collections;
+  const collections = connection.collections;
   for (const key in collections) {
     await collections[key].deleteMany({});
   }

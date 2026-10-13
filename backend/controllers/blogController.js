@@ -1,6 +1,8 @@
-const asyncHandler = require('express-async-handler');
-const Blog = require('../models/Blog');
-const { generateBlogWithAgents } = require('../utils/multiAgent');
+import asyncHandler from 'express-async-handler';
+import Blog from '../models/Blog.js';
+import multiAgent from '../utils/multiAgent.js';
+
+const { generateBlogWithAgents } = multiAgent;
 
 // @desc    Start AI blog generation (Multi-Agent)
 // @route   POST /api/blogs/generate
@@ -117,7 +119,7 @@ const deleteBlog = asyncHandler(async (req, res) => {
   res.status(200).json({ id: req.params.id, message: 'Blog removed' });
 });
 
-module.exports = {
+export {
   generateBlog,
   getBlogs,
   getBlogById,
