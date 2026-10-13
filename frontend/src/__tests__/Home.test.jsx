@@ -26,8 +26,10 @@ describe('Home Page', () => {
         </BrowserRouter>
       </Provider>
     );
-    expect(screen.getByText(/Multi-Agent AI/i)).toBeInTheDocument();
-    expect(screen.getByText(/Blog Content Platform/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /Write better blogs/i })
+    ).toBeInTheDocument();
+    expect(screen.getByText(/A team of specialized AI agents/i)).toBeInTheDocument();
   });
 
   it('shows agent cards', () => {

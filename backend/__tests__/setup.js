@@ -9,6 +9,7 @@ process.env.JWT_SECRET = 'test-jwt-secret-key-for-jest';
 process.env.JWT_EXPIRE = '1h';
 process.env.NODE_ENV = 'test';
 process.env.FRONTEND_URL = 'https://blogcraft-ai.onrender.com,http://localhost:3000';
+process.env.GROQ_API_KEY = 'test-only-groq-api-key';
 
 let mongoServer;
 

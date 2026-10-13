@@ -26,7 +26,7 @@ describe('Navbar', () => {
         </BrowserRouter>
       </Provider>
     );
-    expect(screen.getByText(/BlogCraft AI/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /BlogCraft AI/i })).toBeInTheDocument();
   });
 
   it('shows Login when not authenticated', () => {
