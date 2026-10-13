@@ -7,10 +7,10 @@
  * caps output tokens, and trims context passed between agents.
  */
 
-require('dotenv').config();
-const { ChatGroq } = require('@langchain/groq');
-const { HumanMessage, SystemMessage } = require('@langchain/core/messages');
-const Blog = require('../models/Blog');
+import 'dotenv/config'; 
+import { ChatGroq } from '@langchain/groq';
+import { HumanMessage, SystemMessage } from '@langchain/core/messages';
+import Blog from '../models/Blog.js';
 
 const modelName = process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
 
@@ -80,10 +80,10 @@ async function generateBlogWithAgents(blogId) {
       `Research the topic: "${topic}" for the audience: "${audience}". Provide a clear research brief.`
     );
 
-    await Blog.findByIdAndUpdate(blogId, { researchBrief });
+    await findByIdAndUpdate(blogId, { researchBrief });
 
     // ========== 2. PLANNER AGENT ==========
-    await Blog.findByIdAndUpdate(blogId, { status: 'planning' });
+    await findByIdAndUpdate(blogId, { status: 'planning' });
     console.log(`[${blogId}] Planner Agent started...`);
 
     const outline = await callAgent(
@@ -91,7 +91,7 @@ async function generateBlogWithAgents(blogId) {
       `Topic: "${topic}"\nAudience: "${audience}"\nTone: "${tone}"\n\nResearch Brief:\n${trim(researchBrief, 3000)}\n\nCreate the outline.`
     );
 
-    await Blog.findByIdAndUpdate(blogId, { outline });
+    await findByIdAndUpdate(blogId, { outline });
 
     // ========== 3. SEO AGENT ==========
     console.log(`[${blogId}] SEO Agent started...`);
@@ -125,10 +125,10 @@ async function generateBlogWithAgents(blogId) {
       };
     }
 
-    await Blog.findByIdAndUpdate(blogId, { seoData });
+    await findByIdAndUpdate(blogId, { seoData });
 
     // ========== 4. WRITER AGENT ==========
-    await Blog.findByIdAndUpdate(blogId, { status: 'writing' });
+    await findByIdAndUpdate(blogId, { status: 'writing' });
     console.log(`[${blogId}] Writer Agent started...`);
 
     const seoCompact = {
@@ -155,7 +155,7 @@ Write the full blog post in clean Markdown.`
     );
 
     // ========== 5. EDITOR AGENT ==========
-    await Blog.findByIdAndUpdate(blogId, { status: 'editing' });
+    await findByIdAndUpdate(blogId, { status: 'editing' });
     console.log(`[${blogId}] Editor Agent started...`);
 
     const finalContent = await callAgent(
@@ -170,7 +170,7 @@ Write the full blog post in clean Markdown.`
       topic;
 
     // ========== COMPLETE ==========
-    await Blog.findByIdAndUpdate(blogId, {
+    await findByIdAndUpdate(blogId, {
       status: 'completed',
       content: finalContent,
       title,
@@ -179,7 +179,7 @@ Write the full blog post in clean Markdown.`
     console.log(`[${blogId}] Multi-Agent generation completed with Groq + LangChain!`);
   } catch (error) {
     console.error(`[${blogId}] Generation error:`, error.message);
-    await Blog.findByIdAndUpdate(blogId, {
+    await findByIdAndUpdate(blogId, {
       status: 'failed',
       errorMessage: error.message,
     });
@@ -187,4 +187,4 @@ Write the full blog post in clean Markdown.`
   }
 }
 
-module.exports = { generateBlogWithAgents };
+export default { generateBlogWithAgents };
